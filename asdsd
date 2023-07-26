@@ -1,0 +1,23 @@
+<table class="product-display-table">
+    <thead>
+        <tr>
+            <th>Nama Kegiatan</th>
+            <th>Informasi Kegiatan</th>
+            <th>Link Kegiatan</th>
+            <th>Gambar kegiatan</th>
+            <th>action</th>
+        </tr>
+    </thead>
+    <?php while ($row = mysqli_fetch_assoc($select)) { ?>
+        <tr>
+            <td><?php echo $row['nama_keg']; ?></td>
+            <td><?php echo $row['info']; ?></td>
+            <td><a href=""><?php echo $row['link']; ?></a></td>
+            <td><img src="uploaded_img/<?php echo $row['gambar']; ?>" height="100" alt=""></td>
+            <td>
+                <a href="admin_update.php?edit=<?php echo $row['id']; ?>" class="btn"> <i class="fas fa-edit"></i> edit </a>
+                <a href="admin_page.php?delete=<?php echo $row['id']; ?>" class="btn"> <i class="fas fa-trash"></i> delete </a>
+            </td>
+        </tr>
+    <?php } ?>
+</table>
