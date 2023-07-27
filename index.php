@@ -1,129 +1,124 @@
-<?php
-include 'config.php';
-session_start();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['username']) && isset($_POST['Password'])) {
-        $username = $_POST['username'];
-        $password = $_POST['Password'];
-
-        // Validate and sanitize user input
-        $username = filter_var($username, FILTER_SANITIZE_STRING);
-        // You can add more validation for the password if needed.
-
-        // Use prepared statements to prevent SQL injection
-        $stmt = mysqli_prepare($conn, "SELECT * FROM user WHERE username=?");
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-
-        // Check if the username exists in the database
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $storedPassword = $row['password'];
-            $userRole = $row['role']; // Retrieve the user's role from the database
-
-            // Verify the hashed password using password_verify
-            if (password_verify($password, $storedPassword)) {
-                // Set session variables
-                $_SESSION['username'] = $username;
-                $_SESSION['role'] = $userRole; // Store the user's role in the session
-                $_SESSION['status'] = "login";
-
-                // Redirect the user to a secure page after successful login
-                header("Location: admin_page.php");
-                exit();
-            } else {
-                echo "Invalid password.";
-            }
-        } else {
-            echo"Invalid username.";
-        }
-    } else {
-        echo"Please enter both username and password.";
-    }
-}
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <!-- CSS Saya -->
-  <link rel="stylesheet" href="style.css" />
-  <!-- <link rel="stylesheet" href="/login.css" /> -->
-
-  <title>Login</title>
-  <link rel="icon" type="image/png" href="" />
-
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Jampan High School</title>
+    <link rel="icon" type="Logo.png" href="Logo.png" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
 
-<body>
-  <section class="form my-5">
-    <div class="container">
-      <div class="row align-items-center g-0">
-        <div class="col-lg-12">
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#page-top">Jampan High School</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="col-lg-6 px-5 pt-5">
-          <h1 style="font-size: 38px; font-family: 'Mulish', sans-serif; font-weight: 700" class="py-2">Login</h1>
-         
-      
-          
-          <form method="POST" action="">
-            <div class="form-row">
-              <div class="mb-4">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" placeholder="contoh@yahoo.com" id="email" value="" class="form-control rounded-3" name="username" />
-
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="mb-4">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" placeholder="minimun 8 characters" class="form-control rounded-3" name="Password">
-
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="mb-2">
-                <input type="checkbox" name="connected" class="form-check-input" />
-                <label for="connected" class="form-check-label">Remember Me</label>
-              </div>
-              <div class="form">
-                <div class="d-grid my-4">
-                  <button type="submit" class="btn btn-primary rounded-3">Login</button>
+    </nav>
+    <!-- Masthead-->
+    <header class="masthead">
+        <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+            <div class="d-flex justify-content-center">
+                <div class="text-center">
+                    <img src="Logo.png" alt="">
+                    <h1 class="mx-auto my-0 text-uppercase">Welcome to Jampan High School</h1>
+                    <h5 class="text-white-50 mx-auto mt-2 mb-5">A reputable institution committed to providing quality education and fostering a nurturing learning environment for students. With a strong emphasis on academic excellence, character development, and extracurricular engagement, Jampan High School aims to empower its students to become responsible citizens and future leaders.</h5>
+                    <a class="btn btn-primary" href="register.php">Get Started</a>
                 </div>
-              </div>
-              <div class="form">
-                <div class="row text-center">
-                  <div style="color: #c2c2c2; font-size: 16px; font-family: 'Mulish', sans-serif">Or Sign in With</div>
-                </div>
-                <div class="form" style="margin: 24px">
-                  <div class="d-grid">
-                    <a class="btn btn-outline-primary rounded-3"><span class="iconify" data-inline="false" data-icon="grommet-icons:google" style="margin-right: 8px; font-size: 24px"></span> Sign in with Google</a>
-                  </div>
-                </div>
-              </div>
             </div>
-            <p>Don't have an account? <a href="register.php">Create an Account</a></p>
-            <p>Forgot your password? <a href="#">Click Here</a></p>
-          </form>
         </div>
-      </div>
-    </div>
-  </section>
+    </header>
+    <!-- About-->
+    <section class="about-section text-center" id="about">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="text-white mb-4">Leading High School in Japan</h2>
+                    <p class="text-white-50">
+                        A reputable institution committed to providing quality education and fostering a nurturing learning environment for students. With a strong emphasis on academic excellence, character development, and extracurricular engagement, Jampan High School aims to empower its students to become responsible citizens and future leaders.
+                    </p>
+                </div>
+            </div>
+            <img class="img-fluid" src="about.jpg" alt="..." />
+        </div>
+    </section>
+    <!-- Contact-->
+    <section class="contact-section bg-black" id="contact">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="card py-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                            <h4 class="text-uppercase m-0">Address</h4>
+                            <hr class="my-4 mx-auto" />
+                            <div class="small text-black-50">4923 School Street, Tokyo</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="card py-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-envelope text-primary mb-2"></i>
+                            <h4 class="text-uppercase m-0">Email</h4>
+                            <hr class="my-4 mx-auto" />
+                            <div class="small text-black-50"><a href="#!">hello@jampanhighschool.com</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="card py-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                            <h4 class="text-uppercase m-0">Phone</h4>
+                            <hr class="my-4 mx-auto" />
+                            <div class="small text-black-50">+81 () 270601071101</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="social d-flex justify-content-center">
+                <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
+                <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
+                <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+    <!-- Footer-->
+    <footer class="footer bg-black small text-center text-white-50">
+        <div class="container px-4 px-lg-5">Copyright &copy; Jampan High School 2023</div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <!-- * *                               SB Forms JS                               * *-->
+    <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 </body>
 
 </html>

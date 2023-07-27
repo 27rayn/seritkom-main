@@ -4,7 +4,7 @@
 session_start();
 
 if (!isset($_SESSION['role'])) {
-   header("Location: index.php"); // Redirect to the login page or another page
+   header("Location: login.php"); // Redirect to the login page or another page
    exit();
 }
 
@@ -69,7 +69,7 @@ if (isset($_POST['logout'])) {
 
    if (isset($message)) {
       foreach ($message as $message) {
-         echo '<span class="message">' . $message . '</span>';
+         echo '<div class="alert alert-success" role="alert">' . $message . '</div>';
       }
    }
 
@@ -87,7 +87,7 @@ if (isset($_POST['logout'])) {
                   <input class="form-control" type="text" placeholder="Masukkan nama kegiatan" name="nama_kegiatan" class="box">
                </div>
                <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="Masukkan informasi kegiatan" name="info_kegiatan" class="box">
+                  <textarea class="form-control" type="text" placeholder="Masukkan informasi kegiatan" name="info_kegiatan" rows="3"></textarea>
                </div>
                <div class="mb-3">
                   <input class="form-control" type="text" placeholder="Masukkan link" name="link" class="box">
@@ -135,15 +135,17 @@ if (isset($_POST['logout'])) {
                      <td><a href=""><?php echo $row['link']; ?></a></td>
                      <td><img src="uploaded_img/<?php echo $row['gambar']; ?>" height="100" alt=""></td>
                      <td class="col-2">
-                        <a href="admin_update.php?edit=<?php echo $row['id']; ?>" class="mb-3 col-12 btn btn-md btn-warning"> <i class="fas fa-edit"></i> edit </a>
-                        <a href="admin_page.php?delete=<?php echo $row['id']; ?>" class="col-12 btn btn-md btn-danger"> <i class="fas fa-trash"></i> delete </a>
+                        <?php if ($_SESSION['role'] == 1) { ?>
+                           <a href="admin_update.php?edit=<?php echo $row['id']; ?>" class="mb-3 col-12 btn btn-md btn-warning"> <i class="fas fa-edit"></i> edit </a>
+                           <a href="admin_page.php?delete=<?php echo $row['id']; ?>" class="col-12 btn btn-md btn-danger"> <i class="fas fa-trash"></i> delete </a>
+                        <?php } ?>
                      </td>
                   </tr>
                <?php } ?>
             </table>
          </tbody>
          <form action="" method="POST">
-            <input type="submit" class="btn btn-lg btn-danger col-12 mt-5" name="logout" value="Log out">
+            <input type="submit" class="btn btn-lg btn-danger col-12 mt-5 mb-5" name="logout" value="Log out">
          </form>
       </div>
 
