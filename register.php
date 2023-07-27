@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
                     <p>By creating an account you agree to our <a href="#" style="color: dodgerblue">Terms & Privacy</a>.</p>
-                    <p>Already have an account? <a style="color: dodgerblue" href="index.php">Login</a></p>
+                    <p>Already have an account? <a style="color: dodgerblue" href="login.php">Login</a></p>
                     <div class="form-row">
                         <div class="form">
                             <div class="d-grid my-4">

@@ -9,6 +9,7 @@ if (isset($_POST['update_keg'])) {
 
    $nama_kegiatan = $_POST['nama_kegiatan'];
    $link = $_POST['link'];
+   $tgl = $_POST['tgl'];
    $gambar = $_FILES['gambar']['name'];
    $gambar_tmp_name = $_FILES['gambar']['tmp_name'];
    $gambar_folder = 'uploaded_img/' . $gambar;
@@ -17,7 +18,7 @@ if (isset($_POST['update_keg'])) {
       $message[] = 'please fill out all';
    } else {
 
-      $update_keg = "UPDATE info_keg SET nama_keg='$nama_kegiatan', link='$link', gambar='$gambar'  WHERE id = '$id'";
+      $update_keg = "UPDATE info_keg SET nama_keg='$nama_kegiatan', link='$link', tgl='$tgl', gambar='$gambar'  WHERE id = '$id'";
       $upload = mysqli_query($conn, $update_keg);
 
       if ($upload) {
@@ -73,6 +74,9 @@ if (isset($_POST['update_keg'])) {
                </div>
                <div class="mb-3">
                   <input type="text" min="0" class="form-control" name="link" value="<?php echo $row['link']; ?>" placeholder="Masukkan link">
+               </div>
+               <div class="mb-3">
+                  <input type="date" min="0" class="form-control" name="tgl" value="<?php echo $row['tgl']; ?>" placeholder="Masukkan Tanggal">
                </div>
                <div class="mb-3">
                   <input type="file" class="form-control" name="gambar" accept="image/png, image/jpeg, image/jpg">

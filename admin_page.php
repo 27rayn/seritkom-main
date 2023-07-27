@@ -13,6 +13,7 @@ if (isset($_POST['add_keg'])) {
    $nama_kegiatan = $_POST['nama_kegiatan'];
    $info_kegiatan = $_POST['info_kegiatan'];
    $link = $_POST['link'];
+   $tgl = $_POST['tgl'];
    $gambar = $_FILES['gambar']['name'];
    $gambar_tmp_name = $_FILES['gambar']['tmp_name'];
    $gambar_folder = 'uploaded_img/' . $gambar;
@@ -20,7 +21,7 @@ if (isset($_POST['add_keg'])) {
    if (empty($nama_kegiatan) || empty($link) || empty($gambar)) {
       $message[] = 'please fill out all';
    } else {
-      $insert = "INSERT INTO info_keg(nama_keg, info, link, gambar) VALUES('$nama_kegiatan', '$info_kegiatan', '$link', '$gambar')";
+      $insert = "INSERT INTO info_keg(nama_keg, info, link, tgl, gambar) VALUES('$nama_kegiatan', '$info_kegiatan', '$link', '$tgl', '$gambar')";
       $upload = mysqli_query($conn, $insert);
       if ($upload) {
          move_uploaded_file($gambar_tmp_name, $gambar_folder);
@@ -93,6 +94,9 @@ if (isset($_POST['logout'])) {
                   <input class="form-control" type="text" placeholder="Masukkan link" name="link" class="box">
                </div>
                <div class="mb-3">
+                  <input class="form-control" type="date" placeholder="Tanggal" name="tgl" class="box">
+               </div>
+               <div class="mb-3">
                   <input class="form-control" type="file" accept="image/png, image/jpeg, image/jpg" name="gambar" class="box">
                </div>
                <div class="mb-3">
@@ -124,7 +128,8 @@ if (isset($_POST['logout'])) {
                   <tr>
                      <th scope="col">Nama Kegiatan</th>
                      <th scope="col">Info Kegiatan</th>
-                     <th scope="col">Link</th>
+                     <th scope="col-2">Link</th>
+                     <th scope="col">Tanggal Kegiatan</th>
                      <th scope="col">Gambar Kegiatan</th>
                   </tr>
                </thead>
@@ -133,6 +138,9 @@ if (isset($_POST['logout'])) {
                      <td class="col-2"><?php echo $row['nama_keg']; ?></td>
                      <td class="col-6"><?php echo $row['info']; ?></td>
                      <td><a href=""><?php echo $row['link']; ?></a></td>
+                     <td>
+                        <p href=""><?php echo $row['tgl']; ?></p>
+                     </td>
                      <td><img src="uploaded_img/<?php echo $row['gambar']; ?>" height="100" alt=""></td>
                      <td class="col-2">
                         <?php if ($_SESSION['role'] == 1) { ?>
